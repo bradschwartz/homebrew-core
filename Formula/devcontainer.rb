@@ -15,6 +15,10 @@ class Devcontainer < Formula
   end
 
   test do
-    assert_match "0.37.0", shell_output("#{bin}/devcontainer --version")
+    system "git", "clone", "https://github.com/microsoft/vscode-remote-try-rust"
+    cd "vscode-remote-try-rust" do
+      output = shell_output("DOCKER_HOST=/dev/null #{bin}/devcontainer up --workspace-folder .", 1)
+      assert_match '{"outcome":"error","message":"', output
+    end
   end
 end
