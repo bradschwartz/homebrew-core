@@ -15,10 +15,16 @@ class Devcontainer < Formula
   end
 
   test do
-    system "git", "clone", "https://github.com/microsoft/vscode-remote-try-rust"
-    cd "vscode-remote-try-rust" do
-      output = shell_output("DOCKER_HOST=/dev/null #{bin}/devcontainer up --workspace-folder .", 1)
-      assert_match '{"outcome":"error","message":"', output
-    end
+    ENV["DOCKER_HOST"] = "/dev/null"
+    # Modified .devcontainer/devcontainer.json from CLI example:
+    # https://github.com/devcontainers/cli#try-out-the-cli
+    (testpath/".devcontainer.json").write <<~EOS
+      {
+        "name": "devcontainer-homebrew-test",
+        "image": "mcr.microsoft.com/devcontainers/rust:0-1-bullseye"
+      }
+    EOS
+    output = shell_output("#{bin}/devcontainer up --workspace-folder .", 1)
+    assert_match '{"outcome":"error","message":"', output
   end
 end
