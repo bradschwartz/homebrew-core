@@ -407,7 +407,7 @@ jobs:
       - run: brew test-bot --only-cleanup-before
 
       - name: Download bottles from GitHub Actions
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: bottles
           path: ~/bottles/
